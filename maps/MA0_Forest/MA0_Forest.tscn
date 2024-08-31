@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://5qkq6dppp5jk"]
+
+[ext_resource type="MeshLibrary" uid="uid://dlhwhwxpkvppp" path="res://utilities/mesh/debug_basic.meshlib" id="1_m32vt"]
+
+[node name="MA0_Forest" type="Node3D"]
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = ExtResource("1_m32vt")
+cell_size = Vector3(1, 1, 1)
+data = {
+"cells": PackedInt32Array(65535, 65534, 196608, 65535, 65535, 196608, 65535, 0, 196608, 65535, 1, 196608, 0, 1, 0, 65534, 0, 0, 0, 65534, 196608, 65534, 65534, 196608, 65533, 65534, 196608, 65533, 65535, 196608, 65533, 0, 196608, 65533, 1, 196608, 65534, 1, 196608, 65534, 2, 196608, 65535, 2, 196608, 0, 2, 196608, 65533, 2, 196608, 1, 2, 196608, 1, 1, 196608, 2, 1, 196608, 2, 0, 196608, 2, 65535, 196608, 2, 65534, 196608, 1, 65534, 196608, 65534, 65535, 196608, 0, 0, 196608, 1, 0, 196608, 1, 65535, 196608, 0, 65535, 196608, 2, 2, 196608)
+}
