@@ -5,61 +5,45 @@
 [sub_resource type="GDScript" id="GDScript_2hw4j"]
 script/source = "extends CharacterBody3D
 
-var WALK_SPEED = 2
-var RUN_SPEED = 4
-var JUMP_VELOCITY = 0
+# Key Bindings
+var run_key = KEY_SHIFT
 
-@export var animation_column = 0
-@export var facing = 8
-
-func _ready():
-	$AnimationPlayer.play(\"walk\") # ! NOT-WORKING
-
-# Get the gravity from the project settings to be synced with RigidBody nodes.
+# Player Movement Values
+var speed_walk = 2
+var speed_run = 4
 var gravity = ProjectSettings.get_setting(\"physics/3d/default_gravity\")
 
+# Player Properties
+var animation_column = 0
+var facing = 12
+
 func _physics_process(delta):
-	
-	# Add the gravity.
-	if not is_on_floor():
-		velocity.y -= gravity * delta
-
-	# Handle jump.
-	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-		
-		
-	var SPEED = WALK_SPEED
-	
-	if Input.is_key_pressed(KEY_SHIFT):
-		SPEED = RUN_SPEED
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var input_dir = Input.get_vector(\"ui_left\", \"ui_right\", \"ui_up\", \"ui_down\")
-	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
-	
-	update_facing(input_dir)
-	update_animation()
+	player_movement()
 	move_and_slide()
 
-func update_facing(input_dir):
-	if input_dir == Vector2(0,-1): # Facing away from camera
-		facing = 8
-	if input_dir == Vector2(0, 1): # Facing towards camera
-		facing = 12
-	if input_dir == Vector2(1,0): # Facing right
-		facing = 10
-	if input_dir == Vector2(-1,0): # Facing left
-		facing = 14
+func player_movement():
+	var speed = speed_walk
+	var input_dir = Input.get_vector(\"ui_left\", \"ui_right\", \"ui_up\", \"ui_down\")
+	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	
+	if Input.is_key_pressed(run_key):
+		speed = speed_run
+		
+	if direction:
+		velocity.x = direction.x * speed
+		velocity.z = direction.z * speed
+	else:
+		velocity.x = move_toward(velocity.x, 0, speed)
+		velocity.z = move_toward(velocity.z, 0, speed)
+		
+	update_facing(input_dir)
 
-func update_animation():
+func update_facing(input_dir):
+	match input_dir:
+		Vector2(0, 1): facing = 12 # Player is Facing Down
+		Vector2(1,0): facing = 10 # Player is Facing Right
+		Vector2(0,-1): facing = 8 # Player is Facing Up 
+		Vector2(-1,0): facing = 14 # Player is Facing Left
 	$Sprite3D.frame = animation_column * 8 + facing
 "
 
@@ -94,8 +78,7 @@ script = SubResource("GDScript_2hw4j")
 metadata/_edit_group_ = true
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-billboard = 2
-shaded = true
+billboard = 1
 alpha_cut = 2
 texture_filter = 0
 texture = ExtResource("2_q1pad")
@@ -104,10 +87,12 @@ vframes = 12
 frame = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.96046e-08, 0)
 shape = SubResource("CapsuleShape3D_10j73")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0.4, 0.8)
+transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 1, 0.5)
+fov = 90.0
 near = 0.001
 far = 100.0
 
