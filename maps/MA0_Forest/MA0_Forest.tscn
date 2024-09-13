@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://5qkq6dppp5jk"]
 
-[ext_resource type="MeshLibrary" uid="uid://dlhwhwxpkvppp" path="res://utilities/mesh/debug_basic.meshlib" id="1_m32vt"]
+[ext_resource type="MeshLibrary" uid="uid://dlhwhwxpkvppp" path="res://utilities/mesh/DEBUG_Basic.meshlib" id="1_m32vt"]
 
 [node name="MA0_Forest" type="Node3D"]
 
