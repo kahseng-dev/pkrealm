@@ -8,21 +8,21 @@ script/source = "extends CharacterBody3D
 class_name Player
 
 # Speed Values
-const SPEED_WALK = 2
-const SPEED_RUN = 4
+const SPEED_WALK: int = 1
+const SPEED_RUN: int = 2
 
 # Sprite Properties
-var sprite_facing = 12
+var sprite_facing: int = 12
 
 # Key Bindings
-const KEYBIND_RUN = KEY_SHIFT
+const KEYBIND_RUN: Key = KEY_SHIFT
 
 func _physics_process(delta):
 	handle_movement()
 
 func handle_movement():
-	var direction = Vector2.ZERO
-	var speed = SPEED_WALK
+	var direction: Vector2
+	var speed: int = SPEED_WALK
 	
 	if Input.is_key_pressed(KEYBIND_RUN): speed = SPEED_RUN
 	
@@ -31,7 +31,7 @@ func handle_movement():
 	elif Input.is_action_pressed(\"ui_left\"): direction = Vector2(-1, 0)
 	elif Input.is_action_pressed(\"ui_right\"): direction = Vector2(1, 0)
 	
-	velocity = (transform.basis * Vector3(direction.x, 0, direction.y)).normalized() * speed
+	velocity = Vector3(direction.x, 0, direction.y).normalized() * speed
 	update_sprite_facing(direction)
 	move_and_slide()
 
