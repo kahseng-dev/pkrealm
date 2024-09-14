@@ -5,46 +5,43 @@
 [sub_resource type="GDScript" id="GDScript_2hw4j"]
 script/source = "extends CharacterBody3D
 
+class_name Player
+
+# Speed Values
+const SPEED_WALK = 2
+const SPEED_RUN = 4
+
+# Sprite Properties
+var sprite_facing = 12
+
 # Key Bindings
-var run_key = KEY_SHIFT
-
-# Player Movement Values
-var speed_walk = 2
-var speed_run = 4
-var gravity = ProjectSettings.get_setting(\"physics/3d/default_gravity\")
-
-# Player Properties
-var animation_column = 0
-var facing = 12
+const KEYBIND_RUN = KEY_SHIFT
 
 func _physics_process(delta):
-	player_movement()
+	handle_movement()
+
+func handle_movement():
+	var direction = Vector2.ZERO
+	var speed = SPEED_WALK
+	
+	if Input.is_key_pressed(KEYBIND_RUN): speed = SPEED_RUN
+	
+	if Input.is_action_pressed(\"ui_up\"): direction = Vector2(0, -1)
+	elif Input.is_action_pressed(\"ui_down\"): direction = Vector2(0, 1)
+	elif Input.is_action_pressed(\"ui_left\"): direction = Vector2(-1, 0)
+	elif Input.is_action_pressed(\"ui_right\"): direction = Vector2(1, 0)
+	
+	velocity = (transform.basis * Vector3(direction.x, 0, direction.y)).normalized() * speed
+	update_sprite_facing(direction)
 	move_and_slide()
 
-func player_movement():
-	var speed = speed_walk
-	var input_dir = Input.get_vector(\"ui_left\", \"ui_right\", \"ui_up\", \"ui_down\")
-	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	
-	if Input.is_key_pressed(run_key):
-		speed = speed_run
-		
-	if direction:
-		velocity.x = direction.x * speed
-		velocity.z = direction.z * speed
-	else:
-		velocity.x = move_toward(velocity.x, 0, speed)
-		velocity.z = move_toward(velocity.z, 0, speed)
-		
-	update_facing(input_dir)
-
-func update_facing(input_dir):
-	match input_dir:
-		Vector2(0, 1): facing = 12 # Player is Facing Down
-		Vector2(1,0): facing = 10 # Player is Facing Right
-		Vector2(0,-1): facing = 8 # Player is Facing Up 
-		Vector2(-1,0): facing = 14 # Player is Facing Left
-	$Sprite3D.frame = animation_column * 8 + facing
+func update_sprite_facing(direction):
+	match direction:
+		Vector2(0, 1): sprite_facing = 12 # Player Sprite is Facing Down
+		Vector2(1,0): sprite_facing = 10 # Player Sprite is Facing Right
+		Vector2(0,-1): sprite_facing = 8 # Player Sprite is Facing Up 
+		Vector2(-1,0): sprite_facing = 14 # Player Sprite is Facing Left
+	$Sprite3D.frame = sprite_facing
 "
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_10j73"]
