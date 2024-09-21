@@ -21,26 +21,26 @@ func _physics_process(delta):
 	handle_movement()
 
 func handle_movement():
-	var direction: Vector2
+	var direction: Vector3
 	var speed: int = SPEED_WALK
 	
 	if Input.is_key_pressed(KEYBIND_RUN): speed = SPEED_RUN
 	
-	if Input.is_action_pressed(\"ui_up\"): direction = Vector2(0, -1)
-	elif Input.is_action_pressed(\"ui_down\"): direction = Vector2(0, 1)
-	elif Input.is_action_pressed(\"ui_left\"): direction = Vector2(-1, 0)
-	elif Input.is_action_pressed(\"ui_right\"): direction = Vector2(1, 0)
+	if Input.is_action_pressed(\"ui_up\"): direction = Vector3.FORWARD
+	elif Input.is_action_pressed(\"ui_down\"): direction = Vector3.BACK
+	elif Input.is_action_pressed(\"ui_left\"): direction = Vector3.LEFT
+	elif Input.is_action_pressed(\"ui_right\"): direction = Vector3.RIGHT
 	
-	velocity = Vector3(direction.x, 0, direction.y).normalized() * speed
+	velocity = direction.normalized() * speed
 	update_sprite_facing(direction)
 	move_and_slide()
 
 func update_sprite_facing(direction):
 	match direction:
-		Vector2(0, 1): sprite_facing = 12 # Player Sprite is Facing Down
-		Vector2(1,0): sprite_facing = 10 # Player Sprite is Facing Right
-		Vector2(0,-1): sprite_facing = 8 # Player Sprite is Facing Up 
-		Vector2(-1,0): sprite_facing = 14 # Player Sprite is Facing Left
+		Vector3.FORWARD: sprite_facing = 8
+		Vector3.BACK: sprite_facing = 12
+		Vector3.LEFT: sprite_facing = 14
+		Vector3.RIGHT: sprite_facing = 10
 	$Sprite3D.frame = sprite_facing
 "
 
